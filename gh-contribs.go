@@ -8,6 +8,11 @@ import (
     "os"
 )
 
+/*
+ * TODO
+ *  Parse JSON from URI and construct a contribution history by date
+ */
+
 func main() {
     const BASE = "https://api.github.com/users/"
     var name string = ""
