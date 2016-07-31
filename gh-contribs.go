@@ -10,7 +10,8 @@ import (
 
 /*
  * TODO
- *  Parse JSON from URI and construct a contribution history by date
+ *  1)  Parse JSON from URI and construct a contribution history by date
+ *  2)  Fix range error if no args
  */
 
 func main() {
