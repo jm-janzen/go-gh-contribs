@@ -5,6 +5,7 @@ import (
     "net/http"
     "os"
     "encoding/json"
+    "log"
 )
 
  /*
@@ -16,6 +17,13 @@ import (
     Name        string  `json:"name"`
     Email       string  `json:"email"`
     EventsURL   string  `json:"events_url"`
+ }
+
+ type GithubUserEvents []struct {
+    Id          string  `json:"id"`
+ }
+ type Payload struct {
+    PushId      string  `json:"push_id"`
  }
 
 func main() {
@@ -52,6 +60,24 @@ func main() {
             gu.Name,
             gu.Email,
             gu.EventsURL)
+
+        resp, err := http.Get(reqURI + "/events")
+
+        if err != nil {
+            os.Exit(1)
+        } else {
+            var gue GithubUserEvents
+
+            decoder := json.NewDecoder(resp.Body)
+            err := decoder.Decode(&gue)
+            if err != nil {
+                log.Fatal(err)
+                os.Exit(1)
+            }
+
+            fmt.Fprintf(os.Stdout, gue[0].Id)
+
+        }
     }
 }
 
