@@ -65,7 +65,7 @@ func main() {
             gu.Email,
             gu.EventsURL)
 
-        resp, err := http.Get(reqURI + "/events")
+        resp, err := http.Get(reqURI + "/events?per_page=100&page=0")
 
         if err != nil {
             os.Exit(1)
@@ -79,8 +79,8 @@ func main() {
                 os.Exit(1)
             }
 
-            for _, g := range gue {
-                fmt.Fprintf(os.Stdout, "%s:\t%s\n", g.CreatedAt.String()[0:10], g.Type)
+            for i, g := range gue {
+                fmt.Fprintf(os.Stdout, "[%02d] %s:\t%s\n", i, g.CreatedAt.String()[0:10], g.Type)
             }
 
         }
