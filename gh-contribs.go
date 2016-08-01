@@ -30,10 +30,6 @@ import (
     Size        int     `json:"size"`
  }
 
- /* TODO
-  *  Provide a User-Agent to Github API so we don't get rate-limited
-  */
-
 func main() {
     const BASE = "https://api.github.com/users/"
     var name string = ""
@@ -48,7 +44,10 @@ func main() {
     var reqURI string = BASE + name
     fmt.Fprintf(os.Stdout, "URI endpoint: %s\n", reqURI)
 
-    resp, err := http.Get(reqURI)
+    client := &http.Client{}
+    req,_ := http.NewRequest("GET", reqURI, nil)
+    req.Header.Add("User-Agent", "gh-contribs")
+    resp, err := client.Do(req)
 
     if err != nil {
         os.Exit(1)
@@ -69,7 +68,8 @@ func main() {
             gu.Email,
             gu.EventsURL)
 
-        resp, err := http.Get(reqURI + "/events?per_page=100&page=0")
+        req,_ := http.NewRequest("GET", reqURI + "/events?per_page=100&page=0", nil)
+        resp, err := client.Do(req)
 
         if err != nil {
             os.Exit(1)
