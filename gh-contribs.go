@@ -9,9 +9,9 @@ import (
 )
 
  type GithubUser struct {
-    Login   string  `json:"login"`
-    Name    string  `json:"name"`
-    Email   string  `json:"email"`
+    Login       string  `json:"login"`
+    Name        string  `json:"name"`
+    Email       string  `json:"email"`
     EventsURL   string  `json:"events_url"`
  }
 
@@ -43,7 +43,11 @@ func main() {
             os.Exit(1)
         }
 
-        fmt.Fprintf(os.Stdout, "login:%s, name:%s, email:%s, events_url:%s\n", gu.Login, gu.Name, gu.Email, gu.EventsURL)
+        fmt.Fprintf(os.Stdout, "login:%s, name:%s, email:%s, events_url:%s\n"
+            , gu.Login
+            , gu.Name
+            , gu.Email
+            , gu.EventsURL)
     }
 }
 
