@@ -4,14 +4,14 @@ import (
     "fmt"
     "log"
     "net/http"
-    "io"
     "os"
+    "encoding/json"
 )
 
-/*
- * TODO
- *  1)  Fix range error if no args
- */
+ type GithubUser struct {
+    Name    string  `json:"login"`
+    Email   string  `json:"email"`
+ }
 
 func main() {
     const BASE = "https://api.github.com/users/"
@@ -33,10 +33,15 @@ func main() {
         log.Fatal(err)
     } else {
         defer resp.Body.Close()
-        _, err := io.Copy(os.Stdout, resp.Body)
+
+        decoder := json.NewDecoder(resp.Body)
+        var gu GithubUser
+        err := decoder.Decode(&gu)
         if err != nil {
-            log.Fatal(err)
+            os.Exit(1)
         }
+
+        fmt.Fprintf(os.Stdout, "login:%s, email:%s\n", gu.Name, gu.Email)
     }
 }
 
