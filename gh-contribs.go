@@ -8,6 +8,10 @@ import (
     "encoding/json"
 )
 
+ /*
+  * Internal model of JSON from
+  * Github API /users/ ...
+  */
  type GithubUser struct {
     Login       string  `json:"login"`
     Name        string  `json:"name"`
@@ -43,7 +47,8 @@ func main() {
             os.Exit(1)
         }
 
-        fmt.Fprintf(os.Stdout, "\nlogin:\t%s, \nname:\t%s, \nemail:\t%s, \nevents:\t%s\n",
+        fmt.Fprintf(os.Stdout,
+            "\nlogin:\t%s, \nname:\t%s, \nemail:\t%s, \nevents:\t%s\n",
             gu.Login,
             gu.Name,
             gu.Email,
