@@ -10,16 +10,15 @@ import (
 
 /*
  * TODO
- *  1)  Parse JSON from URI and construct a contribution history by date
- *  2)  Fix range error if no args
+ *  1)  Fix range error if no args
  */
 
 func main() {
     const BASE = "https://api.github.com/users/"
     var name string = ""
 
-    if len(os.Args) < 1 {
-        fmt.Fprintf(os.Stderr, "Usage: ./gh-contribs [username]")
+    if len(os.Args) <= 2 {
+        fmt.Fprintf(os.Stderr, "Usage: ./gh-contribs [username]\n")
         os.Exit(1)
     } else {
         name = os.Args[1]
