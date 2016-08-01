@@ -43,11 +43,11 @@ func main() {
             os.Exit(1)
         }
 
-        fmt.Fprintf(os.Stdout, "login:%s, name:%s, email:%s, events_url:%s\n"
-            , gu.Login
-            , gu.Name
-            , gu.Email
-            , gu.EventsURL)
+        fmt.Fprintf(os.Stdout, "login:%s, name:%s, email:%s, events_url:%s\n",
+            gu.Login,
+            gu.Name,
+            gu.Email,
+            gu.EventsURL)
     }
 }
 
