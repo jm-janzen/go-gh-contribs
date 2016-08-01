@@ -2,7 +2,6 @@ package main
 
 import (
     "fmt"
-    "log"
     "net/http"
     "os"
     "encoding/json"
@@ -36,7 +35,7 @@ func main() {
     resp, err := http.Get(reqURI)
 
     if err != nil {
-        log.Fatal(err)
+        os.Exit(1)
     } else {
         defer resp.Body.Close()
 
