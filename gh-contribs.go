@@ -21,9 +21,12 @@ import (
 
  type GithubUserEvents []struct {
     Id          string  `json:"id"`
+    Type        string  `json:"type"`
+    CreatedAt   string  `json:"created_at"`
  }
  type Payload struct {
     PushId      string  `json:"push_id"`
+    Size        int     `json:"size"`
  }
 
 func main() {
@@ -75,7 +78,10 @@ func main() {
                 os.Exit(1)
             }
 
-            fmt.Fprintf(os.Stdout, gue[0].Id)
+            //fmt.Fprintf(os.Stdout, gue[0].Type)
+            for _, g := range gue {
+                fmt.Fprintf(os.Stdout, "%s:\t%s\n", g.CreatedAt, g.Type)
+            }
 
         }
     }
