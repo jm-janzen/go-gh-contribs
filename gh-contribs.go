@@ -6,6 +6,7 @@ import (
     "os"
     "encoding/json"
     "log"
+    "time"
 )
 
  /*
@@ -22,7 +23,7 @@ import (
  type GithubUserEvents []struct {
     Id          string  `json:"id"`
     Type        string  `json:"type"`
-    CreatedAt   string  `json:"created_at"`
+    CreatedAt   time.Time `json:"created_at"`
  }
  type Payload struct {
     PushId      string  `json:"push_id"`
@@ -78,9 +79,8 @@ func main() {
                 os.Exit(1)
             }
 
-            //fmt.Fprintf(os.Stdout, gue[0].Type)
             for _, g := range gue {
-                fmt.Fprintf(os.Stdout, "%s:\t%s\n", g.CreatedAt, g.Type)
+                fmt.Fprintf(os.Stdout, "%s:\t%s\n", g.CreatedAt.String()[0:10], g.Type)
             }
 
         }
