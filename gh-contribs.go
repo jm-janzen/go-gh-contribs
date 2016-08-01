@@ -17,7 +17,7 @@ func main() {
     const BASE = "https://api.github.com/users/"
     var name string = ""
 
-    if len(os.Args) <= 2 {
+    if len(os.Args) <= 1 {
         fmt.Fprintf(os.Stderr, "Usage: ./gh-contribs [username]\n")
         os.Exit(1)
     } else {
