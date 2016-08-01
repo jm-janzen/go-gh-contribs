@@ -30,6 +30,10 @@ import (
     Size        int     `json:"size"`
  }
 
+ /* TODO
+  *  Provide a User-Agent to Github API so we don't get rate-limited
+  */
+
 func main() {
     const BASE = "https://api.github.com/users/"
     var name string = ""
