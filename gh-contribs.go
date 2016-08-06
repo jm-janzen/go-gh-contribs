@@ -85,18 +85,23 @@ func main() {
 
             var currentStreak, highestStreak, day int = 0, 0, 0
             for _, g := range gue {
-                fmt.Fprintf(os.Stdout, "[%02d] %s:\t%s\n", currentStreak, g.CreatedAt.String()[0:10], g.Type)
 
                 if day == g.CreatedAt.Day() {
+                    //*XXX*/fmt.Println(day, "==", g.CreatedAt.Day())
                     currentStreak++
                 } else {
+                    //*XXX*/fmt.Println(day, "!=", g.CreatedAt.Day())
                     if highestStreak < currentStreak {
-                        fmt.Println(highestStreak, currentStreak)
+                        //*XXX*/fmt.Println(highestStreak, "<", currentStreak)
                         highestStreak = currentStreak
                     }
                     currentStreak = 0
                 }
                 day = g.CreatedAt.Day()
+                fmt.Fprintf(os.Stdout, "[%02d] %s:\t%s\n",
+                    currentStreak + 1,
+                    g.CreatedAt.String()[0:10],
+                    g.Type)
             }
 
             // ie highest number of commits in a day
