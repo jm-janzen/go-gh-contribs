@@ -7,6 +7,7 @@ import (
     "encoding/json"
     "log"
     "time"
+    "strconv"
 )
 
  /*
@@ -45,7 +46,11 @@ func main() {
     fmt.Fprintf(os.Stdout, "URI endpoint: %s\n", reqURI)
 
     client := &http.Client{}
-    req,_ := http.NewRequest("GET", reqURI, nil)
+    req,_ := http.NewRequest("GET",
+    reqURI +
+        "?client_id=" + "7f46d3c17268b610d86d" +
+        "&client_secret=" + "44530b218e3e6ce30084ec7e51a36b585dc41b59",
+    nil)
     req.Header.Add("User-Agent", "gh-contribs")
     resp, err := client.Do(req)
 
@@ -68,46 +73,61 @@ func main() {
             gu.Email,
             gu.EventsURL)
 
-        req,_ := http.NewRequest("GET", reqURI + "/events?per_page=100&page=0", nil)
-        resp, err := client.Do(req)
-
-        if err != nil {
-            os.Exit(1)
-        } else {
-            var gue GithubUserEvents
-
-            decoder := json.NewDecoder(resp.Body)
-            err := decoder.Decode(&gue)
-            if err != nil {
-                log.Fatal(err)
-                os.Exit(1)
-            }
-
-            var currentStreak, highestStreak, day int = 0, 0, 0
-            for _, g := range gue {
-
-                if day == g.CreatedAt.Day() {
-                    //*XXX*/fmt.Println(day, "==", g.CreatedAt.Day())
-                    currentStreak++
+            //var responses []GithubUserEvents
+            /*
+             * XXX
+             *  Fails after page=10
+             */
+            var totalStreaks int = 0
+            for i := 0; i < 100; i++ {
+                reqEventsURI := reqURI + "/events?page=" + strconv.Itoa(i + 1) +
+                    //"&per_page=100" +
+                    "&client_id=" + "7f46d3c17268b610d86d" + 
+                    "&redirect_uri=http://jmjanzen.com/gh-contribs" + 
+                    "&client_secret=" + "" /* XXX insert id here */
+                fmt.Println("querying: %s", reqEventsURI)
+                req,_ = http.NewRequest("GET",  reqEventsURI, nil)
+                resp,err := client.Do(req)
+                // TODO load up responses arr
+                if err != nil {
+                    os.Exit(1)
                 } else {
-                    //*XXX*/fmt.Println(day, "!=", g.CreatedAt.Day())
-                    if highestStreak < currentStreak {
-                        //*XXX*/fmt.Println(highestStreak, "<", currentStreak)
-                        highestStreak = currentStreak
+                    var gue GithubUserEvents
+
+                    decoder := json.NewDecoder(resp.Body)
+                    err := decoder.Decode(&gue)
+                    if err != nil {
+                        fmt.Fprintf(os.Stdout, "%s", decoder)
+                        log.Print(err)
+                        i = 100
                     }
-                    currentStreak = 0
+
+                    var currentStreak, highestStreak, day int = 0, 0, 0
+                    for _, g := range gue {
+                        fmt.Fprintf(os.Stdout, "[%02d] %s:\t%s\n", currentStreak, g.CreatedAt.String()[0:10], g.Type)
+
+                        if day == g.CreatedAt.Day() {
+                            currentStreak++
+                        } else {
+                            fmt.Println("new day")
+                            if highestStreak < currentStreak {
+                                fmt.Println(highestStreak, currentStreak)
+                                highestStreak = currentStreak
+                                totalStreaks += highestStreak
+                            }
+                            currentStreak = 0
+                        }
+                        day = g.CreatedAt.Day()
+                    }
+
+                    // ie highest number of commits in a day
+                    fmt.Fprintf(os.Stdout, "highest streak: %d\n", highestStreak)
+
                 }
-                day = g.CreatedAt.Day()
-                fmt.Fprintf(os.Stdout, "[%02d] %s:\t%s\n",
-                    currentStreak + 1,
-                    g.CreatedAt.String()[0:10],
-                    g.Type)
+                // don't over-spam Gh API
+                //time.Sleep(1 * time.Second)
             }
-
-            // ie highest number of commits in a day
-            fmt.Fprintf(os.Stdout, "streak: %d\n", highestStreak)
-
-        }
+            fmt.Fprintf(os.Stdout, "total streaks: %d\n", totalStreaks)
     }
 }
 
